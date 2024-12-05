@@ -1,0 +1,45 @@
+.conteinerLogin{
+    display:flex;
+    margin: 0;
+    }
+    
+    .div-reg{
+    width: 50%;
+    height: 100vh;
+    background-color: rgb(75, 192, 239);
+    }
+    
+    .div-log{
+    width: 50%;
+    height: 100vh;
+    background-color: rgb(220, 225, 230);
+    }
+    
+    .form-log{
+        margin-top:20% ;
+        align-items: center;
+        display:inline-flex;
+        position: relative;
+        top: 30%;
+        left:49%;
+        max-width: 80%; /* Incrementa el ancho si es necesario */
+        height: 70vh;
+        transform: translate(-50%,-50%);
+        padding: 5%;
+    }
+    
+    .contenido{
+        margin-top:20% ;
+        align-items: center;
+        display:inline-block;
+        position: relative;
+        top: 30%;
+        left:49%;
+        max-width: 80%; /* Incrementa el ancho si es necesario */
+        height: 70vh;
+        transform: translate(-50%,-50%);
+        padding: 5%;
+    
+    }
+    
+    

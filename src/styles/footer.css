@@ -1,0 +1,74 @@
+/* Estilo base para el footer */
+.footer {
+    background-color: #282c34;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  /* Estilo para cada columna */
+  .footer-info,
+  .footer-links,
+  .footer-social {
+    flex: 1;
+    margin: 10px;
+  }
+  
+  /* Títulos */
+  .footer h4 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #ffd700;
+  }
+  
+  /* Enlaces */
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-links li {
+    margin: 5px 0;
+  }
+  
+  .footer-links a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .footer-links a:hover {
+    color: #ffd700;
+  }
+  
+  /* Redes sociales */
+  .footer-social .social-icons a {
+    display: inline-block;
+    margin-right: 10px;
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .footer-social .social-icons a:hover {
+    color: #ffd700;
+  }
+  
+  /* Derechos reservados */
+  .footer-bottom {
+    margin-top: 20px;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #bbb;
+  }
+  

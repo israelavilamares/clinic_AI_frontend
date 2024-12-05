@@ -1,0 +1,51 @@
+/* Estilos del contenedor principal */
+.navbar-home {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 0.9rem 1rem;
+  }
+  
+  /* Contenedor interno */
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Marca de la clínica */
+  .navbar-brand a {
+    font-size: 1.9rem;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .navbar-brand a:hover {
+    color: #70c7f6;
+  }
+  
+  /* Enlaces del menú */
+  .navbar-links {
+    list-style-type: none;
+    display: flex;
+    gap: 3rem;
+  }
+  
+  .navbar-link {
+
+    font-size: 1.5rem;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .navbar-link:hover {
+    color: #007bff;
+  }
+  
