@@ -4,7 +4,7 @@ import "../styles/log.css";
 import { Password } from 'primereact/password';
 import { useNavigate } from "react-router-dom";
 import { Button } from 'primereact/button';
-import logo from '../imgs/Designer.png';
+
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });

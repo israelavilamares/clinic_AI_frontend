@@ -5,7 +5,11 @@ import Home from './components/Home'; // Single Home Component with sections
 import Footer from './components/footer';
 import Login from './pages/login';
 import PagReg from './pages/register';
-
+import 'primeicons/primeicons.css';
+import 'primereact/resources/themes/saga-blue/theme.css'; // Tema principal (puedes cambiarlo)
+import 'primereact/resources/primereact.min.css';
+import 'primereact/resources/primereact.css';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
 
 function App() {
   return (
