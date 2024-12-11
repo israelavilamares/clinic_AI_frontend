@@ -1,31 +1,57 @@
 import React from "react";
 import { useState } from 'react';
+import { useNavigate, useRouteError } from "react-router-dom";
 import "../styles/log.css";
 import { Password } from 'primereact/password';
-import { useNavigate } from "react-router-dom";
 import { Button } from 'primereact/button';
-
+import { ProgressSpinner } from 'primereact/progressspinner';
+import apiClient from "../api/api.js"; // axion
 
 const Login = () => {
-  const [formData, setFormData] = useState({ username: '', password: '' });
 
+  const [isLoading, setIsLoading] = useState(false);
+  // const [formData, setFormData] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+/*  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  };
+  };*/
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Datos enviados:', formData);
-    // Aquí puedes enviar los datos al servidor o validar el usuario
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault(); 
+    setIsLoading(true);
+    const formData  = new FormData(e.target);
+    console.log(formData);
 
-  const goToRegister = () => {
-     
-      navigate("/register"); // Redirige a la página de registro
-  };
+    try {
+        const response = await apiClient.post("/login",formData, {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        });
+  
+        if (response.data.access_token) {
+          localStorage.setItem("token", response.data.access_token);
+          // Redirige según el rol del usuario
+    
+          if (response.data.rol === 'paciente') {
+              navigate("/paciente");
+          } else if (response.data.rol === "doctor") {
+              navigate("/doctores");
+          } else {
+              alert("Rol desconocido");
+          }
+      }
+    } catch (error) {
+        console.error("Error en la autenticación:", error);
+        alert("Usuario o contraseña incorrectos");
+    }finally{
+      setIsLoading(false);
+    }
+};
+
+  const goToRegister = () => { navigate("/register");}; 
   
   return (
     <div className="conteinerLogin"> 
@@ -50,10 +76,10 @@ const Login = () => {
                   <label style={{fontWeight:'500' ,fontSize:'1.5em', color:'rgb(75, 192, 239)'}} htmlFor="username">Email:</label>
                     <input
                         type="text"
-                        id="username"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
+                        id="email"
+                        name="email"
+                    //    value={formData.email}
+                   //     onChange={handleChange}
 
                         style={{ width: '100%', padding: '10px'}}
                         required
@@ -64,8 +90,8 @@ const Login = () => {
                   <Password
                   id="password"
                   name="password"
-                  value={formData.password} // Sincroniza con el estado
-                  onChange={handleChange} // Actualiza el estado
+                  //value={formData.password} // Sincroniza con el estado
+                //  onChange={handleChange} // Actualiza el estado
                   toggleMask
                   feedback={false}
                   //className="custom-password"
@@ -78,14 +104,34 @@ const Login = () => {
                     fontSize: '1em', // Cambia el tamaño de fuente
                     padding: '10px', // Ajusta el relleno
                     width:'20vw'
-                    
                   }}
                 />               
                 <br />
                 <br />
-                <br />
-                <Button onClick={goToRegister} label="Entrar" style={{display:'block',minWidth:'20vw', fontSize:'1.5em',padding:'.5em',fontWeight:'500'}}></Button>
-
+                {isLoading && (
+                  <ProgressSpinner 
+                    style={{
+                      position: 'absolute', // Fijar el spinner en la ventana
+                      top: '50%', // Centrar verticalmente
+                      left: '50%', // Centrar horizontalmente
+                      transform: 'translate(-50%, -50%)', // Ajustar el punto de referencia
+                      width:'25vw',
+                      height:'25vh',
+                      margin: '20px auto',
+                    }} 
+                  />
+                )}
+                <Button 
+                  label="Entrar" 
+                disabled={isLoading} // Deshabilita el botón mientras se carga
+                  style={{
+                    display: 'block',
+                    minWidth: '20vw',
+                    fontSize: '1.5em',
+                    padding: '.5em',
+                    fontWeight: '500'
+                  }}
+                />
 
             </form>
         </div>

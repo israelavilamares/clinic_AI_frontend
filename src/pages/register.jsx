@@ -5,9 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
+import apiClient from "../api/api.js";
 
 const PagReg = () => {
-  const [formData, setFormData] = useState({ username: "", email: "", password: "", telefono: ""});
+
+  const [formData, setFormData] = useState({
+    email: "", 
+    password: "",
+    username: "",
+  });
 
   const navigate = useNavigate();
 
@@ -16,16 +22,32 @@ const PagReg = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Datos enviados:", formData);
-    // Aquí puedes enviar los datos al servidor o validar el usuario
-  };
 
+    //validar_password = 
+    try {
+      //console.log("Datos enviados:", formData);
+      const respuesta = await apiClient.post('/register', formData);
+      //console.log("Respuesta del servidor:", respuesta.data);
+      alert("Usuario registrado exitosamente");
+      navigate("/login"); // Redirige después de un registro exitoso
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.detail) {
+        // Mostrar mensaje de error específico del servidor
+        alert(error.response.data.detail);
+      } else {
+        // Mensaje genérico para otros errores
+        alert("Hubo un error al registrar el usuario");
+      }
+    }
+  };
+  
   const goToLogin = () => {
     navigate("/login"); // Redirige a la página de inicio de sesión
   };
 
+// pages rest
   return (
     <div className="conteinerLogin">
       <div className="div-reg">
@@ -62,24 +84,6 @@ const PagReg = () => {
             Registrar
           </h2>
           <form onSubmit={handleSubmit}>
-            {/* Nombre completo */}
-            <FloatLabel>
-              <InputText
-                id="username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                required
-                style={{
-                  padding: "1em",
-                  height: "2em",
-                  fontSize: "1em",
-                }}
-              />
-              <label htmlFor="username">Nombre Completo</label>
-            </FloatLabel>
-
-            <br />
             <br />
 
             {/* Email */}
@@ -100,41 +104,40 @@ const PagReg = () => {
               <label htmlFor="email">Correo Electrónico</label>
             </FloatLabel>
 
-            <br />
+              <br />
+     
+
+              {/* username */}
+              <FloatLabel>
+              <InputText
+                id="username"
+                name="username"
+                type="text"
+                value={formData.username}
+                onChange={handleChange}
+                required
+                style={{
+                  padding: "1em",
+                  height: "2em",
+                  fontSize: "1em",
+                }}
+              />
+              <label htmlFor="email">Nombre de usuario</label>
+            </FloatLabel>
             <br />
 
-            {/*telefono*/}
-            <FloatLabel>
-              <InputText  
-              id="telefono"
-              name="telefono"
-              type="number"
-              value={formData.telefono}
-              onChange={handleChange}
-              required
-              style={{
-                padding: "1em",
-                height: "2em",
-                fontSize: "1em",
-              }}
-              />
-             <label htmlFor="email">Telefono</label>
-            </FloatLabel>
-             <br />
-          
+             <br />          
          
             {/* Contraseña */}
-            <label
+            <label htmlFor="password"
               style={{
                 fontWeight: "500",
                 fontSize: "1em",
                 color: "rgb(2, 0, 50)",
                 display: "block",
-              }}
-              htmlFor="password"
-            >
-              Contraseña
-            </label>
+              }} 
+            ></label>
+
             <Password
               id="password"
               name="password"
@@ -144,17 +147,16 @@ const PagReg = () => {
               feedback={true}
               required
               style={{
-               
-                padding: "1em",
+               marginBottom:"1em",
+                width:"2.5em",
+                padding: ".5em",
                 height: "2.5em",
                 fontSize: "1.5em",
               }}
             />
-
-            <br />
-            <br />
             <br />
             <Button
+              type="submit"
               label="Registrar"
               style={{
                 display: "block",
