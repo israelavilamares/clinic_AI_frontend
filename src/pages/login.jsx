@@ -10,20 +10,14 @@ import apiClient from "../api/api.js"; // axion
 const Login = () => {
 
   const [isLoading, setIsLoading] = useState(false);
-  // const [formData, setFormData] = useState({ email: '', password: '' });
+ 
   const navigate = useNavigate();
-
-/*  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };*/
 
   const handleSubmit = async (e) => {
     e.preventDefault(); 
     setIsLoading(true);
     const formData  = new FormData(e.target);
     console.log(formData);
-
     try {
         const response = await apiClient.post("/login",formData, {
           headers: {
@@ -33,10 +27,14 @@ const Login = () => {
   
         if (response.data.access_token) {
           localStorage.setItem("token", response.data.access_token);
+          localStorage.setItem("id", response.data.id);
+          const userId = response.data.id;
+
+
           // Redirige según el rol del usuario
     
           if (response.data.rol === 'paciente') {
-              navigate("/paciente");
+              navigate(`/paciente/${userId}/`);
           } else if (response.data.rol === "doctor") {
               navigate("/doctores");
           } else {
@@ -78,9 +76,6 @@ const Login = () => {
                         type="text"
                         id="email"
                         name="email"
-                    //    value={formData.email}
-                   //     onChange={handleChange}
-
                         style={{ width: '100%', padding: '10px'}}
                         required
                     />

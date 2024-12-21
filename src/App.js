@@ -8,7 +8,8 @@ import PagReg from './pages/register';
 import ProtectedRoute from './components/ProtectedRoute';
 import PagPac from './pages/pagpac';
 import PagDoc from './pages/Doc';
-// -------------------STYLES--------------------------------//
+import RegTwo from './pages/registro2';
+// -------------------STYLES--------------------------------// principales
 import 'primeicons/primeicons.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -32,8 +33,9 @@ function App() {
       <Route path="/login" element={<><Login /> <Footer /></>} />
       <Route path='/register' element={ <PagReg /> }/>
       {/* Rutas protegidas */}
-      <Route path="/paciente" element={<ProtectedRoute><PagPac /></ProtectedRoute>}/>
+      <Route path="/paciente/:id/" element={<ProtectedRoute><PagPac /></ProtectedRoute>}/>
       <Route path='/doctores' element={<ProtectedRoute> <PagDoc/></ProtectedRoute>}/>
+      <Route path='/register/paciente/registro2' element={<RegTwo/>}/>
       </Routes>
     </Router>
   );

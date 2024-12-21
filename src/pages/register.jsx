@@ -3,7 +3,7 @@ import "../styles/log.css";
 import { Password } from "primereact/password";
 import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
+import { InputText } from 'primereact/inputtext';
 import { FloatLabel } from "primereact/floatlabel";
 import apiClient from "../api/api.js";
 
@@ -29,9 +29,13 @@ const PagReg = () => {
     try {
       //console.log("Datos enviados:", formData);
       const respuesta = await apiClient.post('/register', formData);
-      //console.log("Respuesta del servidor:", respuesta.data);
+      console.log("Respuesta del servidor:", respuesta.data);
+      const userId_ = respuesta.data.user_id;
       alert("Usuario registrado exitosamente");
-      navigate("/login"); // Redirige después de un registro exitoso
+      console.log("paso1")      
+      localStorage.setItem('userId', userId_); // Guardar el user_id en localStorage
+      console.log(userId_);
+      navigate("/register/paciente/registro2"); // Redirige después de un registro exitoso
     } catch (error) {
       if (error.response && error.response.data && error.response.data.detail) {
         // Mostrar mensaje de error específico del servidor
