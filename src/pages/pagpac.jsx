@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useRef} from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from 'primereact/button';
 import { Menubar } from 'primereact/menubar';
@@ -6,14 +6,17 @@ import { Avatar } from 'primereact/avatar';
 import logochido from '../imgs/logo1.png';
 import ModalPac from '../components/dialogpac';
 import {Menu} from  'primereact/menu';
+import { Messages } from 'primereact/messages';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 import "../styles/pagpac.css";
 import apiClient from "../api/api.js"; // axion
 
 
 function PagPac(){
-
-    const menu = React.useRef(null); // Referencia para el menú
-
+    const menu = useRef(null); // Referencia para el menú
+   
+    const [cita,setCita] = useState([]);
     const [isModalVisible, setModalVisible] = useState(false);
     const [userData, setUserData] = useState(null); // State to store user data
     const openModal = () => setModalVisible(true);
@@ -32,12 +35,19 @@ function PagPac(){
             return;
           }
           try {
-           
-            const response = await apiClient.get(`/pacientes/${userId}/`);
-            const retrievedUser = response.data;
-            setUserData(retrievedUser);        
+            
+              const response = await apiClient.get(`/pacientes/${userId}/`);
+              const retrievedUser = response.data;
+              setUserData(retrievedUser);        
+              console.log("Datos recuperados del usuario:", retrievedUser);
+              
+              const userPaciente = response.data[0].id_paciente;
+              console.log(userPaciente);
+              const citaResponse = await apiClient.get(`/citas/?paciente_id=${userPaciente}`);
+              const retriveCitas = citaResponse.data;
+              setCita(retriveCitas);
+              console.log("Datos recuperado from citas:",retriveCitas);
 
-            console.log("Datos recuperados:", retrievedUser);
           } catch (error) {
             console.error("Error fetching user data:", error);
             if (error.response) {
@@ -96,7 +106,6 @@ function PagPac(){
 
     const id_paciente = userData?.[0]?.id_paciente || null;
     return(
-        
             <div className='main'>
                 <h2>CLINIC</h2>
                 <div className="card">
@@ -104,7 +113,13 @@ function PagPac(){
                 </div> 
 
                 <div className="dashbord">
-                    <h1>Mi cita</h1>
+                    <h1>Mi citas</h1>
+                    <DataTable value={cita}>
+                    <Column field="hora" header="hora" style={{ width: '25%'}}></Column>
+                    <Column field="fecha" header="fecha" style={{ width: '25%' }}></Column>
+                    <Column field="motivo" header="motivo" style={{ width: '25%' }}></Column>
+                    <Column field="Acciones" header="Acciones" style={{ width: '25%' }}></Column>
+                    </DataTable>
                     <Button className="btn-appo" label="Agendar Cita" icon="pi pi-calendar-clock" onClick={openModal} />
                     <ModalPac isVisible={isModalVisible} onClose={closeModal} 
                     idPaciente={id_paciente} />
@@ -132,7 +147,7 @@ function PagPac(){
                             </p>
                             <p>
                               <strong>Estado:</strong>{" "}
-                              {paciente.is_delete ? "Eliminado" : "Activo"}
+                              {paciente.is_delete ? "Activo" : "Eliminado"}
                             </p>
                           </div>
                         ))}
