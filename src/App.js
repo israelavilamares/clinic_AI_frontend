@@ -11,7 +11,7 @@ import PagDoc from './pages/Doc';
 import RegTwo from './pages/registro2';
 // -------------------STYLES--------------------------------// principales
 import 'primeicons/primeicons.css';
-import 'primereact/resources/themes/saga-blue/theme.css';
+//import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primereact/resources/primereact.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
@@ -42,3 +42,6 @@ function App() {
 }
 
 export default App;
+
+
+

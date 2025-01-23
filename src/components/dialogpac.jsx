@@ -15,7 +15,7 @@ import apiClient from "../api/api.js"; // axion
 //import { use } from "react";
 //id_paciente
 export default function ModalPac({ isVisible, onClose, idPaciente }) {
-    const msgs = useRef(null); // Referencia para el menú
+    const msgs = useRef(null); 
     const [is_loading,setLoading] = useState(false);
     const [motivo, setValue] = useState('');
     const [date, setDate] = useState(null);
@@ -122,17 +122,19 @@ export default function ModalPac({ isVisible, onClose, idPaciente }) {
                     <ProgressSpinner style={{ width: '50px', height: '50px' }} />
                 </div>)}
                     <form className="appoiment" onSubmit={loadData}>
-                    <FloatLabel>
-                    <Calendar value={date} onChange={(e)=> setDate(e.value)} dateFormat="yy-mm-dd" required/>
-                    <label htmlFor="fecha">Fecha</label>
-                    </FloatLabel>
-                    <Dropdown value={selectTime} onChange={(e) =>  setSelectTime(e.value)} options={ times } optionLabel="time" placeholder="selecciona un horario" className="w-full md:w-14rem" required/>
-                    <FloatLabel>
-                    <InputText id="motivo" value={motivo} onChange={(e) => setValue(e.target.value)} required />
-                    <label htmlFor="motivo">Motivo</label>
-                    </FloatLabel>
-             
-                    <Button label="Registrar" type="submit" disabled={is_loading} style={{display:"flex", height:"3em"}}/>
+                   
+                        <FloatLabel>
+                        <Calendar value={date} onChange={(e)=> setDate(e.value)} dateFormat="yy-mm-dd" required/>
+                        <label htmlFor="fecha">Fecha</label>
+                        </FloatLabel>
+                        <Dropdown value={selectTime} onChange={(e) =>  setSelectTime(e.value)} options={ times } optionLabel="time" placeholder="selecciona un horario" className="w-full md:w-14rem" required/>
+                        <FloatLabel>
+                        <InputText id="motivo" value={motivo} onChange={(e) => setValue(e.target.value)} required />
+                        <label htmlFor="motivo">Motivo</label>
+                        </FloatLabel>
+                
+                        <Button label="Registrar" type="submit" disabled={is_loading} style={{display:"flex", height:"3em"}}/>
+                        
                     
                     </form>
                 

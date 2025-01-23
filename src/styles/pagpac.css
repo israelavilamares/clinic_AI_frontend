@@ -27,10 +27,10 @@
 
 .dashbord{
     border-radius: 20px;
-    padding: 4em;
-    margin-left: 1em;
-    margin-right: 1em;
-    height: 93vh;
+    padding: 5em;
+    margin-left: 3em;
+    margin-right: 3em;
+    height: 100vh;
     background-color: #fff;
 }
 
@@ -47,4 +47,63 @@
 }
 .pi {
     font-size: 1.5rem; /* Tamaño del ícono */
+}
+
+.paciente-card strong{
+    font-weight: 900;
+}
+
+
+.model-delete{
+    min-width: 20%;
+    min-height: 20%;  
+    background-color: rgb(173, 213, 248);
+}
+
+
+.model-edit{
+    border: 1px solid rgb(76, 139, 247);
+    background-color: aliceblue;
+    padding: 1rem;
+    min-width: 40%;
+    min-height: 50%;
+   
+}
+
+
+.model-edit form{
+
+    display: flex; /* Changed to flex for alignment */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 1rem;
+    gap: 1rem; /* Adds spacing between children */
+}
+.p-float-label{
+    padding: 1rem; /* Adjusted for better spacing */
+    width: 100%; /* Use full width for better alignment */
+    box-sizing: border-box; /* Prevent padding from breaking layout */
+}
+
+.p-inputtext{
+    padding: .5rem;
+    font-size: 2.1rex;
+}
+.p-dropdown {
+    font-size: 1rem; /* Consistent font size */
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    height: 40px;
+    width: 100%; /* Ensures dropdown aligns with parent width */
+    padding: 0 0.5rem; /* Adjust padding for better visual spacing */
+}
+
+.model-edit .p-button{
+    gap: 2rem; /* Adds spacing between children */
+    margin-right: 1rem;
+    margin-left: 1rem;
+    padding: 0 0.5rem; /* Adjust padding for better visual spacing */
+    height: 2rem;
+    width: 20%;
 }

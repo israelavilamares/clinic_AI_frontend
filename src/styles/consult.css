@@ -14,8 +14,8 @@ form.appoiment .p-inputtext {
 }
 
 form.appoiment .p-dropdown {
-    margin-top: 1em;
-    margin-bottom: 1em;
+    margin-top: .5em;
+    margin-bottom: .5em;
     height: 50px;
     max-width: 40%;
 
