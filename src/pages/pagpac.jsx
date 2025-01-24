@@ -210,8 +210,10 @@
     // EDitar cita
       const editCita =  async (e)=>{
         e.preventDefault(); // Prevenir que el formulario recargue la página
-        console.log(Currentedit.id);
-        if(!Currentedit)return;      
+        if (!Currentedit || !Currentedit.id) {
+          console.error("No hay cita seleccionada para editar.");
+          return; // Termina la ejecución si Currentedit es inválido
+      } 
         try{
          // Crear el payload con los datos del formulario
          const dataL = {
@@ -281,7 +283,7 @@
                       </div>
                    
                       <Button className="btn-appo" label="Agendar Cita" icon="pi pi-calendar-clock" onClick={openModal} />
-                      
+                      <Button className="btn-appo" label="expediente Medico" icon="pi pi-calendar-clock" onClick={openModal} />
                       <ModalPac isVisible={isModalVisible} onClose={closeModal} 
                       idPaciente={id_paciente} />
                   
@@ -300,8 +302,6 @@
                       >
                         <p>¿Estás seguro de que deseas eliminar esta cita?</p>
                       </Dialog>
-
-
                       {/* Diálogo de edit cita */}
 
                       <Dialog  
