@@ -50,6 +50,13 @@
     font-size: 1.5rem; /* Tamaño del ícono */
 }
 
+
+
+.p-tabview-nav{
+    gap: 2rem;
+    padding: 1rem;
+    font-size: large;
+}
 .paciente-card strong{
     font-weight: 900;
 }
@@ -107,4 +114,14 @@
     padding: 0 0.5rem; /* Adjust padding for better visual spacing */
     height: 2rem;
     width: 20%;
+}
+
+.form-exp1{
+display: inline-block;
+justify-content: center;
+align-items: center;
+}
+
+.btn-exp{
+    margin-left: 1rem;
 }

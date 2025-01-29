@@ -14,13 +14,16 @@
   import { Column } from 'primereact/column';
   import { Tag } from 'primereact/tag';
   import { Dialog } from 'primereact/dialog';
+  import { TabView, TabPanel } from 'primereact/tabview';
+  import { Toast } from 'primereact/toast';
+  import ModalG from "../components/modal.jsx";
   import "../styles/pagpac.css";
   import apiClient from "../api/api.js"; // axion
   
 
-
   function PagPac(){
-      const msg = useRef(null);
+      const msg = useRef(null); //msg
+      const toast = useRef(null);
       const menu = useRef(null); // Referencia para el menú
       const [cita,setCita] = useState([]);
       const [deleteProductDialog, setDeleteProductDialog] = useState(false); // Estado para controlar el diálogo
@@ -31,6 +34,8 @@
       const openModal = () => setModalVisible(true);
       const closeModal = () => setModalVisible(false);    
       const navigate = useNavigate();
+      //modal general
+      const [isModalVisibleG,setModalVisibleG] = useState(false);
       //modal de editar
       const [visible, setvisible] = useState(false); //modal editar
       const [Currentedit, setSelectedEdit] = useState(null); //id para hacer put
@@ -38,7 +43,14 @@
       const [motivo,setMotivo] = useState("");
       const [estado,setEstado] = useState("");
       const estados = ["pendiente", "cancelada","completada"];
-
+      //formulario expediente
+      const [name,setName] = useState("");
+      const [tel,setTel] = useState("");
+      const [operacion,setOperacion] = useState("");
+      const [emfer,setemfer] = useState("");
+      const [alergias, setAlergias] = useState("");
+      const [tratamiento, setTratamieento]= useState("");
+      const [expIdexpe,setExpedienteId] = useState(null);
       
       useEffect(() => {
         const fetchUserData = async () => {
@@ -53,16 +65,13 @@
                 const response = await apiClient.get(`/pacientes/${userId}/`);
                 const retrievedUser = response.data;
                 setUserData(retrievedUser);
-                console.log("Datos recuperados del usuario:", retrievedUser);
 
                 const userPaciente = retrievedUser[0].id_paciente; // Asumiendo que es un array
                 setIdPaciente(userPaciente); // Guarda id_paciente en el estado
-                console.log("ID del paciente:", userPaciente);
 
                 const citaResponse = await apiClient.get(`/citas/?paciente_id=${userPaciente}`);
                 const retrievedCitas = citaResponse.data;
                 setCita(retrievedCitas);
-                console.log("Datos recuperados de citas:", retrievedCitas);
 
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -232,7 +241,7 @@
       }
 
       const showDialogEdit = (rowData) =>{
-          console.log(rowData);
+          console.log(JSON.stringify(cita, null, 2));
         if (!rowData || !rowData.id) {
           console.error("Invalid row data:", rowData);
           return;
@@ -255,10 +264,133 @@
           </React.Fragment>
         );
       };
-
+  
       const id_paciente = userData?.[0]?.id_paciente || null;
+
+      const loadExpe = async () =>{
+        console.log(id_paciente);
+        if(!id_paciente) return;
+          
+        try{
+          const response = await apiClient.get(`/expediente/?id_paciente=${id_paciente}`);
+          //console.log(response.data[0]);
+          if (response.data.length > 0) {
+            const expediente = response.data[0];
+            setName(expediente.nombre_paciente || "");
+            setTel(expediente.telefono || "");
+            setOperacion(expediente.cirugia || "");
+            setemfer(expediente.enfermedad || "");
+            setAlergias(expediente.alergia || "");
+            setTratamieento(expediente.tratamientos || "");
+            setExpedienteId(expediente.id_expediente); // Guarda el ID para PUT id del paciente
+          }else{
+            const expediente = response.data[0];
+            setName("");
+            setTel("");
+            setOperacion("");
+            setemfer("");
+            setAlergias("");
+            setTratamieento("");
+            setExpedienteId(null  );
+          }
+          }catch(error){
+            if (error.response?.status === 404) {
+              // Mensaje específico para expediente vacío
+              toast.current.show({
+                  severity: "warn",
+                  summary: "Aviso",
+                  detail: "No se encontró informacion del historial médico",
+                  life: 3000
+              });
+            }else{
+
+              console.error("error al load data expediente", error);
+            }
+        }
+      }
+
+        useEffect(()=>{
+          if(isModalVisibleG){
+            loadExpe();
+          }
+        },[isModalVisibleG,id_paciente])
+
+      const saveExp =  async (e) =>{
+        e.preventDefault(); 
+        console.log("press"); 
+        //const telInt = parseInt(tel);
+      const dataExp = {
+        nombre_paciente: name,
+        telefono: tel,
+        cirugia: operacion,
+        enfermedad: emfer,
+        tratamientos: tratamiento, 
+        alergia: alergias,
+        id_paciente: id_paciente
+        };
+
+      const updataExp = {
+          nombre_paciente: name,
+          telefono: tel,
+          cirugia: operacion,
+          enfermedad: emfer,
+          tratamientos: tratamiento, 
+          alergia: alergias
+          };
+        console.log(dataExp);
+        console.log("id condicional",expIdexpe);
+        try {
+          // Realizar la llamada GET para verificar si existe el expediente
+          const response = await apiClient.get(`/expediente/?id_paciente=${id_paciente}`);
+          const result = response.data[0]; // Expediente encontrado
+      
+          if (result) {
+            // Si se encuentra el expediente, realiza una actualización (PUT)
+            await apiClient.put(`/expediente/${id_paciente}`, updataExp);
+            toast.current.show({
+              severity: "success",
+              summary: "Actualizado",
+              detail: "Expediente actualizado correctamente",
+              life: 3000,
+            });
+          }
+        } catch (error) {
+          // Si el error es 404, significa que el expediente no existe. Entonces, crea uno nuevo (POST).
+          if (error.response?.status === 404) {
+            try {
+              await apiClient.post("/expediente/", dataExp, {
+                headers: { "Content-Type": "application/json" },
+              });
+              toast.current.show({
+                severity: "success",
+                summary: "Agregado",
+                detail: "Expediente creado correctamente",
+                life: 3000,
+              });
+            } catch (postError) {
+              // Manejo de errores en el POST
+              toast.current.show({
+                severity: "error",
+                summary: "Error",
+                detail: postError.response?.data?.message || "Error al guardar expediente",
+                life: 3000,
+              });
+            }
+          } else {
+            // Manejo de errores generales
+            toast.current.show({
+              severity: "error",
+              summary: "Error",
+              detail: error.response?.data?.message || "Error al guardar expediente",
+              life: 3000,
+            });
+          }
+        }
+      };
+
       return(
               <div className='main'>
+                <Toast ref={toast}/>
                   <h2>CLINIC</h2>
                   <div className="card">
                   <Menubar className="nav-menu custom-menu-spacing" model={items} start={start} end={end} />
@@ -283,11 +415,58 @@
                       </div>
                    
                       <Button className="btn-appo" label="Agendar Cita" icon="pi pi-calendar-clock" onClick={openModal} />
-                      <Button className="btn-appo" label="expediente Medico" icon="pi pi-calendar-clock" onClick={openModal} />
+                      <Button className="btn-appo" label="expediente Medico" icon="pi pi-folder-open" onClick={()=>setModalVisibleG(true)}/>
                       <ModalPac isVisible={isModalVisible} onClose={closeModal} 
                       idPaciente={id_paciente} />
-                  
-                         {/* Diálogo de confirmación para eliminar cita */}
+
+                      {/*modal general*/}
+                      <ModalG isOpen={isModalVisibleG} 
+                      onClose={()=> setModalVisibleG(false)}>
+                          <TabView>
+                              <TabPanel header="datos de personales" leftIcon="pi pi-user">
+                                <div>
+                                  <form className="form-exp1" onSubmit={saveExp}>
+                                  <FloatLabel>
+                                    <InputText id="name" value={name} onChange={(e)=>setName(e.target.value)}/>
+                                    <label htmlFor="name">Nombre</label>
+                                  </FloatLabel>     
+                                  <FloatLabel>
+                                    <InputText id="tel" value={tel} onChange={(e)=>setTel(e.target.value)} keyfilter="int"/>
+                                    <label htmlFor="tel">Telefono</label>
+                                  </FloatLabel>   
+                                             
+                                    <Button className="btn-exp" label="Guardar" type="submit" icon="pi pi-save"/>
+                                  </form>
+                                </div>
+                              
+                              </TabPanel>
+                              <TabPanel header="Datos medicos" leftIcon="pi pi-user-plus">
+                                  <div>
+                                    <form className="form-exp2" onSubmit={saveExp}>
+                                      <FloatLabel>
+                                        <InputText id="ope" value={operacion} onChange={(e) =>setOperacion(e.target.value)}/>
+                                        <label htmlFor="ope">Tienes Operaciones?</label>
+                                      </FloatLabel>       
+                                      <FloatLabel>
+                                        <InputText id="emfermedades" value={emfer} onChange={(e)=> setemfer(e.target.value)}/>
+                                        <label htmlFor="emfermedades">Emfermedades previas</label>
+                                      </FloatLabel>  
+                                      <FloatLabel>
+                                        <InputText id="ale" value={alergias} onChange={(e) => setAlergias(e.target.value)} />
+                                        <label htmlFor="ale">Alegias</label>
+                                      </FloatLabel> 
+                                      <FloatLabel>
+                                        <InputText id="tratamiento" value={tratamiento} onChange={(e) => setTratamieento(e.target.value)} />
+                                        <label htmlFor="tratamiento">tratamientos previos</label>
+                                      </FloatLabel>
+                                      <Button className="btn-exp" label="Guardar" type="submit" icon="pi pi-save"></Button>
+                                    </form>
+                                  </div>                                  
+                              </TabPanel>
+                          </TabView>
+                      </ModalG>
+
+                      {/* Diálogo de confirmación para eliminar cita */}
                       <Dialog
                         className="model-delete" 
                         visible={deleteProductDialog}

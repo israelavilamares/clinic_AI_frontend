@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useRef } from "react";
+import React, { useState,useRef } from "react";
 import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { InputText } from 'primereact/inputtext';
@@ -6,14 +6,10 @@ import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { FloatLabel } from 'primereact/floatlabel';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { useMountEffect } from 'primereact/hooks';
 import { Messages } from 'primereact/messages';
 import "../styles/consult.css";
 import apiClient from "../api/api.js"; // axion
 
-//import { data } from "react-router-dom";    
-//import { use } from "react";
-//id_paciente
 export default function ModalPac({ isVisible, onClose, idPaciente }) {
     const msgs = useRef(null); 
     const [is_loading,setLoading] = useState(false);

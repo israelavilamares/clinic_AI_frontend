@@ -83,14 +83,11 @@ const Login = () => {
                     <br />
                   <label style={{fontWeight:'500' ,fontSize:'1.5em', color:'rgb(75, 192, 239)',   display:'block'}} htmlFor="password">Contraseña:</label>
                   <Password
-                  id="password"
-                  name="password"
-                  //value={formData.password} // Sincroniza con el estado
-                //  onChange={handleChange} // Actualiza el estado
-                  toggleMask
-                  feedback={false}
-                  //className="custom-password"
-                  required
+                    id="password"
+                    name="password"
+                    toggleMask
+                    feedback={false}
+                    required
                   inputStyle={{
                     marginTop:'10px',
                     display:'block',
