@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/log.css";
+import "../styles/pages/log.css";
 import { Password } from "primereact/password";
 import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";

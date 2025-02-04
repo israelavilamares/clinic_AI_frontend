@@ -1,4 +1,4 @@
-import React, { useState,useRef } from "react";
+import React, { useState,useRef,useEffect} from "react";
 import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { InputText } from 'primereact/inputtext';
@@ -10,7 +10,30 @@ import { Messages } from 'primereact/messages';
 import "../styles/consult.css";
 import apiClient from "../api/api.js"; // axion
 
+
+
 export default function ModalPac({ isVisible, onClose, idPaciente }) {
+    const[id_medico,setId] = useState(null); //necesaria para las id's de los medicos
+    const[listaMed,setListMedicos] = useState([]); // inicializo como un array vacio
+    const datamedico = async () => {
+        try {
+            const response = await apiClient.get(`/medicos/`);
+            if (response.data.length > 0) {
+                const ids = response.data.map(medicoid => medicoid.id_medico);
+
+                setId(ids); //i must get just id de cada medico
+                setListMedicos(response.data);
+                console.log(id_medico);
+            }
+        } catch(e) {
+            console.error("Error", e);
+        } 
+    }
+
+    useEffect(() => {
+        datamedico();
+    },[]);
+
     const msgs = useRef(null); 
     const [is_loading,setLoading] = useState(false);
     const [motivo, setValue] = useState('');
@@ -37,22 +60,21 @@ export default function ModalPac({ isVisible, onClose, idPaciente }) {
         {time: '5:30', code:'18'},
 
     ];
-    const [error, setError] = useState(null); // Estado para manejar errores
+    const [error, setError] = useState(null); // Estado para manejar errores}
 
     const loadData = async (e) => {
         e.preventDefault();
         setError(null); 
         try{
-
             const time = selectTime?.time || null; // Extraer solo el valor del horario seleccionado
-            console.log(idPaciente);
             const payload = {
                 id_paciente: idPaciente,
                 fecha: date,
                 hora: time,
-                motivo: motivo
+                motivo: motivo,
+                id_medico: id_medico
             };
-    
+            console.log(payload);
             await apiClient.post("/send/citas", payload, {
                 headers: {
                     "Content-Type": "application/json"
@@ -118,15 +140,19 @@ export default function ModalPac({ isVisible, onClose, idPaciente }) {
                     <ProgressSpinner style={{ width: '50px', height: '50px' }} />
                 </div>)}
                     <form className="appoiment" onSubmit={loadData}>
-                   
-                        <FloatLabel>
-                        <Calendar value={date} onChange={(e)=> setDate(e.value)} dateFormat="yy-mm-dd" required/>
-                        <label htmlFor="fecha">Fecha</label>
+                        <FloatLabel className="w-full md:w-14rem">
+                            <Dropdown inputId="dd-city" value={id_medico} onChange={(e) => setId(e.value)} options={listaMed} optionLabel="nombre" className="w-full"  optionValue="id_medico"/>
+                            <label htmlFor="dd-city">Selecciona a un doctor</label>
                         </FloatLabel>
-                        <Dropdown value={selectTime} onChange={(e) =>  setSelectTime(e.value)} options={ times } optionLabel="time" placeholder="selecciona un horario" className="w-full md:w-14rem" required/>
                         <FloatLabel>
-                        <InputText id="motivo" value={motivo} onChange={(e) => setValue(e.target.value)} required />
-                        <label htmlFor="motivo">Motivo</label>
+                            <Calendar value={date} onChange={(e)=> setDate(e.value)} dateFormat="yy-mm-dd" required/>
+                            <label htmlFor="fecha">Fecha</label>
+                        </FloatLabel>
+                            <Dropdown value={selectTime} onChange={(e) =>  setSelectTime(e.value)} options={ times } optionLabel="time" placeholder="selecciona un horario" className="w-full md:w-14rem" required/>
+                            {/*<Dropdown value={selectTime} onChange={(e) =>  setSelectTime(e.value)} options={ times } optionLabel="doctor" placeholder="selecciona un doctor" className="w-full md:w-14rem" required/>*/}
+                        <FloatLabel>
+                            <InputText id="motivo" value={motivo} onChange={(e) => setValue(e.target.value)} required />
+                            <label htmlFor="motivo">Motivo</label>
                         </FloatLabel>
                 
                         <Button label="Registrar" type="submit" disabled={is_loading} style={{display:"flex", height:"3em"}}/>

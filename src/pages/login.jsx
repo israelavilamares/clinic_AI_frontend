@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from 'react';
 import { useNavigate, useRouteError } from "react-router-dom";
-import "../styles/log.css";
+import "../styles/pages/log.css";
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 import { ProgressSpinner } from 'primereact/progressspinner';

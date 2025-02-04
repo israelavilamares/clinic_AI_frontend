@@ -17,7 +17,7 @@
   import { TabView, TabPanel } from 'primereact/tabview';
   import { Toast } from 'primereact/toast';
   import ModalG from "../components/modal.jsx";
-  import "../styles/pagpac.css";
+  import "../styles/pages/pagpac.css";
   import apiClient from "../api/api.js"; // axion
   
 
@@ -62,13 +62,14 @@
             }
 
             try {
+              // this es good way for make cusult about id
                 const response = await apiClient.get(`/pacientes/${userId}/`);
                 const retrievedUser = response.data;
                 setUserData(retrievedUser);
 
                 const userPaciente = retrievedUser[0].id_paciente; // Asumiendo que es un array
                 setIdPaciente(userPaciente); // Guarda id_paciente en el estado
-
+                                                              // queries are used for set up string insted of int
                 const citaResponse = await apiClient.get(`/citas/?paciente_id=${userPaciente}`);
                 const retrievedCitas = citaResponse.data;
                 setCita(retrievedCitas);
@@ -226,13 +227,17 @@
         try{
          // Crear el payload con los datos del formulario
          const dataL = {
-          
           motivo,
           estado,
         };
         await apiClient.put(`/citas/?id=${Currentedit.id}`,dataL,{headers:{"Content-Type": "application/json"},
         });
-
+        toast.current.show({
+          severity: "success",
+          summary: "Actualizado",
+          detail: "Recargue la tabla",
+          life: 2000,
+        });
         }catch(error){
           console.error("error al actualizar cita",error);
         }finally{
@@ -254,7 +259,7 @@
         setvisible(false);
         setSelectedEdit(null);
       }
-
+      
       const actionsBodyTemplate = (rowData) => {
         return (
           <React.Fragment>
@@ -406,10 +411,12 @@
                       <Messages ref={msg} />
                       <div className="card">
                       <DataTable value={cita} paginator rows={5}>
-                      <Column className="col" field="hora" header="hora" sortable  style={{ minWidth: '12rem' }}></Column>
-                      <Column className="col" field="fecha" header="fecha" sortable style={{ minWidth: '12rem' }}></Column>
-                      <Column className="col" field="motivo" header="motivo" style={{ minWidth: '12rem' }} ></Column>
-                      <Column className="col" field="estado"  header="estado" sortable style={{ minWidth: '12rem' }} body={statusBodyTemplate}></Column>
+                      <Column className="col" field="nombre" header="Hombre del medico" sortable  style={{ minWidth: '12rem' }}></Column>
+                      <Column className="col" field="hora" header="Hora" sortable  style={{ minWidth: '12rem' }}></Column>
+                      <Column className="col" field="fecha" header="Fecha" sortable style={{ minWidth: '12rem' }}></Column>
+                      <Column className="col" field="motivo" header="Motivo" style={{ minWidth: '12rem' }} ></Column>
+                      <Column className="col" field="estado"  header="Estado" sortable style={{ minWidth: '12rem' }} body={statusBodyTemplate}></Column>
+
                       <Column body={actionsBodyTemplate}style={{ minWidth: '20rem' }}></Column>
                       </DataTable>
                       </div>

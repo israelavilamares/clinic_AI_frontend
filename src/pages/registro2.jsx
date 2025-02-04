@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/registro2.css";
+import "../styles/pages/registro2.css";
 import { useState } from 'react';
 import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
