@@ -1,4 +1,4 @@
-  import React,{useState,useEffect,useRef} from "react";
+  import React,{useState,useEffect,useRef,useCallback} from "react";
   import { Dropdown } from 'primereact/dropdown';
   import {InputText} from 'primereact/inputtext';
   import { FloatLabel } from 'primereact/floatlabel';
@@ -272,13 +272,11 @@
   
       const id_paciente = userData?.[0]?.id_paciente || null;
 
-      const loadExpe = async () =>{
-        console.log(id_paciente);
-        if(!id_paciente) return;
-          
-        try{
+      const loadExpe = useCallback(async () => {
+        console.log("el id para expediente", id_paciente);
+        if (!id_paciente) return;
+        try {
           const response = await apiClient.get(`/expediente/?id_paciente=${id_paciente}`);
-          //console.log(response.data[0]);
           if (response.data.length > 0) {
             const expediente = response.data[0];
             setName(expediente.nombre_paciente || "");
@@ -287,38 +285,36 @@
             setemfer(expediente.enfermedad || "");
             setAlergias(expediente.alergia || "");
             setTratamieento(expediente.tratamientos || "");
-            setExpedienteId(expediente.id_expediente); // Guarda el ID para PUT id del paciente
-          }else{
-            const expediente = response.data[0];
+            setExpedienteId(expediente.id_expediente);
+          } else {
             setName("");
             setTel("");
             setOperacion("");
             setemfer("");
             setAlergias("");
             setTratamieento("");
-            setExpedienteId(null  );
+            setExpedienteId(null);
           }
-          }catch(error){
-            if (error.response?.status === 404) {
-              // Mensaje específico para expediente vacío
-              toast.current.show({
-                  severity: "warn",
-                  summary: "Aviso",
-                  detail: "No se encontró informacion del historial médico",
-                  life: 3000
-              });
-            }else{
-
-              console.error("error al load data expediente", error);
-            }
+        } catch (error) {
+          if (error.response?.status === 404) {
+            toast.current.show({
+              severity: "warn",
+              summary: "Aviso",
+              detail: "No se encontró informacion del historial médico",
+              life: 3000
+            });
+          } else {
+            console.error("error al load data expediente", error);
+          }
         }
-      }
-
-        useEffect(()=>{
-          if(isModalVisibleG){
-            loadExpe();
-          }
-        },[isModalVisibleG,id_paciente])
+      }, [id_paciente]); // Add any other dependencies needed
+      
+      useEffect(() => {
+        if (isModalVisibleG) {
+          loadExpe();
+        }
+      }, [isModalVisibleG, id_paciente, loadExpe]);
+      
 
       const saveExp =  async (e) =>{
         e.preventDefault(); 

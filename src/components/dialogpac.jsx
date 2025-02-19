@@ -66,13 +66,17 @@ export default function ModalPac({ isVisible, onClose, idPaciente }) {
         e.preventDefault();
         setError(null); 
         try{
+            const formattedDate = date.toISOString().split('T')[0];
             const time = selectTime?.time || null; // Extraer solo el valor del horario seleccionado
             const payload = {
                 id_paciente: idPaciente,
-                fecha: date,
+                fecha: formattedDate,
                 hora: time,
                 motivo: motivo,
                 id_medico: id_medico
+
+             /* 
+                estado: str */
             };
             console.log(payload);
             await apiClient.post("/send/citas", payload, {
@@ -145,8 +149,8 @@ export default function ModalPac({ isVisible, onClose, idPaciente }) {
                             <label htmlFor="dd-city">Selecciona a un doctor</label>
                         </FloatLabel>
                         <FloatLabel>
-                            <Calendar value={date} onChange={(e)=> setDate(e.value)} dateFormat="yy-mm-dd" required/>
-                            <label htmlFor="fecha">Fecha</label>
+                        <Calendar value={date} onChange={(e) => setDate(e.value)} dateFormat="yy-mm-dd" required/>
+                        <label htmlFor="fecha">Fecha</label>
                         </FloatLabel>
                             <Dropdown value={selectTime} onChange={(e) =>  setSelectTime(e.value)} options={ times } optionLabel="time" placeholder="selecciona un horario" className="w-full md:w-14rem" required/>
                             {/*<Dropdown value={selectTime} onChange={(e) =>  setSelectTime(e.value)} options={ times } optionLabel="doctor" placeholder="selecciona un doctor" className="w-full md:w-14rem" required/>*/}

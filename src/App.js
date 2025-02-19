@@ -30,7 +30,7 @@ function App() {
             </>
           }
         />
-      <Route path="/login" element={<><Login /> <Footer /></>} />
+      <Route path="login" element={<><Login /> <Footer /></>} />
       <Route path='/register' element={ <PagReg /> }/>
       {/* Rutas protegidas */}
       <Route path="/paciente/:id/" element={<ProtectedRoute><PagPac /></ProtectedRoute>}/>
