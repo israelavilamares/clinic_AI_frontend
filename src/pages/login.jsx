@@ -29,7 +29,8 @@ const Login = () => {
           localStorage.setItem("token", response.data.access_token);
           localStorage.setItem("id", response.data.id);
           const userId = response.data.id;
-
+          console.log(userId);
+          console.log(response.data.rol);
 
           // Redirige según el rol del usuario
     
