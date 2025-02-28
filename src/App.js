@@ -9,6 +9,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import PagPac from './pages/pagpac';
 import PagDoc from './pages/Doc';
 import RegTwo from './pages/registro2';
+import PagAdmin from './pages/admin';
+
 // -------------------STYLES--------------------------------// principales
 import 'primeicons/primeicons.css';
 //import 'primereact/resources/themes/saga-blue/theme.css';
@@ -35,6 +37,7 @@ function App() {
       {/* Rutas protegidas */}
       <Route path="/paciente/:id/" element={<ProtectedRoute><PagPac /></ProtectedRoute>}/>
       <Route path='/doctores' element={<ProtectedRoute> <PagDoc/></ProtectedRoute>}/>
+      <Route path={'/admin'} element={<ProtectedRoute><PagAdmin/></ProtectedRoute>}/>
       <Route path='/register/paciente/registro2' element={<RegTwo/>}/>
       </Routes>
     </Router>

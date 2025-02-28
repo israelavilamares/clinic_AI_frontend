@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /src/api
+/src/router
 /.pnp
 .pnp.js
 

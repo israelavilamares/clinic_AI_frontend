@@ -38,8 +38,11 @@ const Login = () => {
               navigate(`/paciente/${userId}/`);
           } else if (response.data.rol === "doctor") {
               navigate("/doctores");
-          } else {
-              alert("Rol desconocido");
+          } else if(response.data.rol === "admin"){
+              navigate('/admin');
+          }else{
+            alert("Rol desconocido");
+
           }
       }
     } catch (error) {
